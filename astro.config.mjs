@@ -31,5 +31,7 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
 
-  adapter: cloudflare(),
+  // 'compile': images are optimized at build time (Sharp), so HTML references
+  // static /_astro/* files directly — no runtime Images binding needed on Workers.
+  adapter: cloudflare({ imageService: 'compile' }),
 });
