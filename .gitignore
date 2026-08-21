@@ -28,3 +28,6 @@ pnpm-debug.log*
 .omc/
 .playwright-mcp/
 mobile-menu-open*.png
+
+# wrangler local state
+.wrangler/
