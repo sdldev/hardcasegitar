@@ -1,0 +1,34 @@
+---
+// Reusable product card for the products listing grid.
+// Minimal: image + title only — ordering happens on the detail page.
+import { Image } from 'astro:assets';
+import type { Product } from '../data/products';
+
+interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+---
+
+<a
+  href={`/products/${product.slug}`}
+  class="group block bg-secondary rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-standard"
+  aria-label={`Lihat detail ${product.title}`}
+>
+  <div class="aspect-square overflow-hidden">
+    <Image
+      src={product.images[0]}
+      alt={product.title}
+      width={500}
+      height={500}
+      sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
+      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-standard"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+  <div class="p-4">
+    <h3 class="text-heading-5 text-white leading-tight whitespace-normal">{product.title}</h3>
+  </div>
+</a>

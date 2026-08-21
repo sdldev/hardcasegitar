@@ -1,86 +1,213 @@
 ---
+// Article detail layout — reading column + optional recent-posts sidebar.
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
+import Base from './Base.astro';
 import FormattedDate from '../components/FormattedDate.astro';
-import Header from '../components/Header.astro';
 
-type Props = CollectionEntry<'blog'>['data'];
+type Props = CollectionEntry<'blog'>['data'] & {
+	recentPosts?: CollectionEntry<'blog'>[];
+};
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, recentPosts = [] } = Astro.props;
+
+const hasSidebar = recentPosts.length > 0;
 ---
 
-<html lang="en">
-	<head>
-		<BaseHead title={title} description={description} />
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-		</style>
-	</head>
+<Base title={`${title} - Hardcase Guitar Indonesia`} description={description}>
+	<main class="pt-[72px]">
+		{/* Breadcrumb */}
+		<nav class="bg-background border-b border-border-color py-4" aria-label="Breadcrumb">
+			<div class="container flex items-center gap-2 text-body-sm text-text-muted">
+				<a href="/" class="hover:text-white transition-colors">Home</a>
+				<svg class="w-3 h-3 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+				<a href="/article" class="hover:text-white transition-colors">Article</a>
+				<svg class="w-3 h-3 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+				<span class="text-foreground truncate max-w-[50vw]">{title}</span>
+			</div>
+		</nav>
 
-	<body>
-		<Header />
-		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
+		<article class="section bg-background">
+			<div class="container">
+				<div class="grid gap-12 lg:gap-16 lg:grid-cols-[minmax(0,1fr)_320px] items-start">
+					{/* Main content column */}
+					<div class="min-w-0">
+						{/* Article header */}
+						<header class="mb-10">
+							<div class="flex items-center gap-3 mb-5">
+								<span class="h-px w-10 bg-primary"></span>
+								<span class="text-body-sm font-semibold uppercase tracking-[0.2em] text-primary">Artikel</span>
+							</div>
+							<h1 class="text-heading-1 text-white mb-5">{title}</h1>
+							<p class="text-body-lg text-text-muted leading-relaxed mb-6">{description}</p>
+							<div class="flex flex-wrap items-center gap-x-4 gap-y-2 pt-5 border-t border-border-color text-body-sm text-muted">
+								<span class="inline-flex items-center gap-2">
+									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+									<FormattedDate date={pubDate} />
+								</span>
+								{
+									updatedDate && (
+										<span class="inline-flex items-center gap-2">
+											<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+											Updated <FormattedDate date={updatedDate} />
+										</span>
+									)
+								}
+							</div>
+						</header>
+
+						{/* Hero image */}
+						{
+							heroImage && (
+								<div class="mb-10 rounded-2xl overflow-hidden border border-border-color">
+									<Image src={heroImage} alt="" width={1600} height={800} class="w-full h-auto" />
+								</div>
+							)
+						}
+
+						{/* Content */}
+						<div class="prose-custom">
+							<slot />
 						</div>
-						<h1>{title}</h1>
-						<hr />
 					</div>
-					<slot />
+
+					{/* Sidebar — recent posts */}
+					{
+						hasSidebar && (
+							<aside class="lg:sticky lg:top-24">
+								<div class="bg-secondary border border-border-color rounded-2xl p-6">
+									<h2 class="flex items-center gap-3 mb-6">
+										<span class="h-px w-5 bg-primary"></span>
+										<span class="text-body-sm font-semibold uppercase tracking-[0.15em] text-foreground">Artikel Terbaru</span>
+									</h2>
+
+									<ul class="space-y-5">
+										{recentPosts.map((post) => (
+											<li>
+												<a href={`/article/${post.id}/`} class="group flex gap-4">
+													<div class="w-20 h-20 shrink-0 rounded-xl overflow-hidden border border-border-color bg-background">
+														{post.data.heroImage ? (
+															<Image
+																src={post.data.heroImage}
+																alt=""
+																width={160}
+																height={160}
+																class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-standard"
+															/>
+														) : (
+															<div class="w-full h-full" />
+														)}
+													</div>
+													<div class="min-w-0">
+														<h3 class="text-body-md font-semibold text-foreground leading-snug line-clamp-2 group-hover:text-primary transition-colors duration-standard">
+															{post.data.title}
+														</h3>
+														<p class="text-body-sm text-muted mt-1.5">
+															<FormattedDate date={post.data.pubDate} />
+														</p>
+													</div>
+												</a>
+											</li>
+										))}
+									</ul>
+
+									<div class="mt-6 pt-5 border-t border-border-color">
+										<a href="/article" class="inline-flex items-center gap-2 text-body-md font-semibold text-primary hover:gap-3 transition-all duration-standard">
+											Lihat Semua Artikel
+											<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+										</a>
+									</div>
+								</div>
+							</aside>
+						)
+					}
 				</div>
-			</article>
-		</main>
-		<Footer />
-	</body>
-</html>
+			</div>
+		</article>
+
+		{/* Back to articles */}
+		<section class="bg-secondary py-16">
+			<div class="container text-center">
+				<p class="text-body-lg text-text-muted mb-6">Sudah selesai membaca?</p>
+				<a
+					href="/article"
+					class="inline-flex items-center gap-2 px-8 py-3 border border-border-color text-foreground text-button font-semibold rounded-full hover:bg-white/5 transition-colors duration-standard"
+				>
+					<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
+					Kembali ke Daftar Artikel
+				</a>
+			</div>
+		</section>
+	</main>
+</Base>
+
+<style is:global>
+	/* Markdown content styling — uses design tokens only */
+	.prose-custom h2 {
+		color: var(--text-white);
+		font-size: var(--text-heading-3);
+		margin-block: 2em 0.75em;
+		padding-top: 0.75em;
+		border-top: 1px solid var(--border-color);
+	}
+	.prose-custom h3 {
+		color: var(--text-white);
+		font-size: var(--text-heading-4);
+		margin-block: 1.5em 0.5em;
+	}
+	.prose-custom p,
+	.prose-custom li {
+		color: var(--text-secondary);
+		line-height: 1.8;
+		margin-bottom: 1.25em;
+	}
+	.prose-custom ul,
+	.prose-custom ol {
+		padding-left: 1.5em;
+		margin-bottom: 1.25em;
+	}
+	.prose-custom ul { list-style: disc; }
+	.prose-custom ol { list-style: decimal; }
+	.prose-custom a { color: var(--primary); text-decoration: none; }
+	.prose-custom a:hover { text-decoration: underline; }
+	.prose-custom strong { color: var(--text-white); font-weight: 600; }
+	.prose-custom blockquote {
+		border-left: 3px solid var(--primary);
+		padding-left: 1.25em;
+		color: var(--text-muted);
+		font-style: italic;
+		margin-block: 1.75em;
+	}
+	.prose-custom code {
+		background: var(--bg-secondary);
+		padding: 0.2em 0.4em;
+		border-radius: var(--radius-sm);
+		font-size: 0.9em;
+		color: var(--text-primary);
+	}
+	.prose-custom pre {
+		background: var(--bg-secondary);
+		border: 1px solid var(--border-color);
+		padding: 1.25em;
+		border-radius: var(--radius-lg);
+		overflow-x: auto;
+		margin-bottom: 1.25em;
+	}
+	.prose-custom pre code { background: transparent; padding: 0; }
+	.prose-custom img { border-radius: var(--radius-lg); margin-block: 1.5em; }
+	.prose-custom hr { border: 0; border-top: 1px solid var(--border-color); margin-block: 2.5em; }
+	.prose-custom table {
+		width: 100%;
+		border-collapse: collapse;
+		margin-bottom: 1.25em;
+		font-size: var(--text-body-md);
+		color: var(--text-secondary);
+	}
+	.prose-custom th {
+		color: var(--text-white);
+		text-align: left;
+		padding: 0.6em 0.75em;
+		border-bottom: 1px solid var(--border-color);
+	}
+	.prose-custom td { padding: 0.6em 0.75em; border-bottom: 1px solid var(--border-color); }
+</style>

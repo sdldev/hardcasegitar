@@ -1,0 +1,65 @@
+--- // FAQ section - frequently asked questions with Icon helper
+
+import Icon from './Icons.astro';
+import { getWhatsAppUrl } from '../data/contact';
+
+const faqs = [
+  {
+    question: 'Berapa lama pengerjaan hardcase custom?',
+    answer: 'Rata-rata pengerjaan membutuhkan 7-14 hari kerja, tergantung kompleksitas desain dan ketersediaan material. Untuk order urgent, kami bisa discuss prioritas produksi.'
+  },
+  {
+    question: 'Apakah menerima pre-order untuk model tertentu?',
+    answer: 'Ya, kami menerima pre-order untuk model yang tidak ada dalam stok. Minimal lead time 2 minggu, dan dikenakan DP 30% di awal.'
+  },
+  {
+    question: 'Bagaimana cara mengukur dimensi gitar saya?',
+    answer: 'Anda bisa datang ke workshop untuk pengukuran langsung (gratis), atau kirim foto profil gitar + body width/length/headstock size via WhatsApp. Kami akan confirm sebelum produksi dimulai.'
+  },
+  {
+    question: 'Apa saja opsi warna dan material yang tersedia?',
+    answer: 'Eksterior: Leather finish (hitam, brown, tan), textured vinyl, denim look. Interior: plush foam, velvet lining, custom foam carving. Semua opsi bisa dikustom sesuai preferensi.'
+  },
+  {
+    question: 'Apakah ada garansi untuk produk custom?',
+    answer: 'Ya, garansi 6 bulan untuk cacat pabrik (jahitan, latch, handle). Garansi tidak cover kerusakan akibat misuse atau force majeure. Wearable parts (hinges, latches) garansi 3 bulan.'
+  },
+  {
+    question: 'Bisa request fitur khusus seperti lock combination, wheels, atau shoulder strap?',
+    answer: 'Tentu! Kami open untuk custom requests seperti combination lock, rolling wheels, telescopic handle, detachable shoulder strap, atau accessory compartments. Akan discussion detail requirement terlebih dahulu.'
+  }
+];
+---
+
+<section class="section bg-secondary" id="faq">
+  <div class="container">
+    <h2 class="text-heading-2 text-center mb-16">Pertanyaan Umum</h2>
+
+    <div class="max-w-[800px] mx-auto space-y-4">
+      {faqs.map((faq, idx) => (
+        <details
+          class="group p-6 bg-bg-secondary border border-border-color rounded-xl hover:border-border-color-hover transition-colors duration-standard"
+          open={idx === 0}
+        >
+          <summary class="flex items-center justify-between cursor-pointer list-none group-open:pb-4">
+            <h3 class="text-body-lg font-semibold text-foreground">{idx + 1}. {faq.question}</h3>
+            <Icon name="chevron-down" class="transition-transform duration-standard group-open:rotate-180"/>
+          </summary>
+          <p class="mt-4 text-body-md text-text-muted leading-relaxed pr-8">
+            {faq.answer}
+          </p>
+        </details>
+      ))}
+    </div>
+
+    {/* CTA */}
+    <div class="text-center mt-12">
+      <p class="text-body-lg text-text-muted mb-4">Masih punya pertanyaan lain?</p>
+      <a href={getWhatsAppUrl('Halo, saya punya pertanyaan mengenai hardcase')}
+         class="inline-flex items-center gap-2 px-6 py-3 bg-whatsapp text-white font-semibold rounded-full hover:bg-whatsapp-hover transition-colors duration-standard">
+        <Icon name="whatsapp"/>
+        Chat WhatsApp
+      </a>
+    </div>
+  </div>
+</section>

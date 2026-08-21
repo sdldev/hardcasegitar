@@ -1,0 +1,120 @@
+---
+// Navigation header - clean dark theme
+import { Image } from 'astro:assets';
+import logoImage from '../assets/images/hardcase-guitar-custom.webp';
+
+interface Props {
+  currentPage?: string;
+}
+
+const { currentPage = 'home' } = Astro.props;
+
+const navLinks = [
+  { href: '/', label: 'Home', page: 'home' },
+  { href: '/products', label: 'Products', page: 'products' },
+  { href: '/article', label: 'Article', page: 'article' },
+  { href: '/contact', label: 'Contact Us', page: 'contact' },
+];
+---
+
+<header
+  id="site-header"
+  class="fixed top-0 left-0 right-0 z-50 border-b border-transparent bg-transparent transition-colors duration-standard"
+>
+  <nav class="container flex items-center justify-between px-4 py-4 max-w-[1200px] mx-auto">
+    {/* Logo */}
+    <a href="/" class="flex items-center gap-2" aria-label="Home">
+      <Image src={logoImage} alt="Logo" width={200} height={125} class="h-8 w-auto object-contain" decoding="async" />
+      <span class="text-body font-semibold text-foreground">Hardcase Guitar Indonesia</span>
+    </a>
+
+    {/* Desktop Menu */}
+    <div class="hidden md:flex items-center gap-6">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          class={`text-body font-medium transition-colors ${currentPage === link.page ? 'text-primary' : 'text-foreground hover:text-primary'}`}
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+
+    {/* Mobile Menu Toggle */}
+    <button
+      id="menu-toggle"
+      class="md:hidden p-2 hover:bg-white/5 rounded-lg transition-colors"
+      aria-label="Toggle menu"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <svg class="icon-open w-6 h-6 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+      <svg class="icon-close hidden w-6 h-6 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+  </nav>
+
+  {/* Mobile Dropdown Menu */}
+  <div
+    id="mobile-menu"
+    class="md:hidden absolute top-full inset-x-0 max-h-0 overflow-hidden bg-secondary shadow-[0_12px_24px_rgb(0_0_0/0.45)] transition-[max-height] duration-standard ease-smooth"
+  >
+    <div class="flex flex-col gap-1 px-4 py-3">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          class={`block px-4 py-3 rounded-lg text-heading-5 font-semibold transition-colors ${currentPage === link.page ? 'text-primary bg-white/5' : 'text-foreground hover:text-primary hover:bg-white/5'}`}
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+  </div>
+</header>
+
+<style>
+  /* Semi-transparent dark background only appears once the page is scrolled */
+  #site-header.header-scrolled {
+    background-color: rgb(0 0 0 / 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-color: var(--border-color);
+    box-shadow: 0 4px 24px rgb(0 0 0 / 0.35);
+  }
+</style>
+
+<script>
+  const header = document.getElementById('site-header');
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  if (header) {
+    const updateScrolledState = () => {
+      header.classList.toggle('header-scrolled', window.scrollY > 10);
+    };
+    updateScrolledState();
+    document.addEventListener('scroll', updateScrolledState, { passive: true });
+  }
+
+  const setMobileMenuOpen = (open: boolean) => {
+    if (!menuToggle || !mobileMenu) return;
+    menuToggle.setAttribute('aria-expanded', String(open));
+    mobileMenu.style.maxHeight = open ? `${mobileMenu.scrollHeight}px` : '0px';
+    menuToggle.querySelector('.icon-open')?.classList.toggle('hidden', open);
+    menuToggle.querySelector('.icon-close')?.classList.toggle('hidden', !open);
+  };
+
+  if (menuToggle && mobileMenu) {
+    menuToggle.addEventListener('click', () => {
+      const isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
+      setMobileMenuOpen(!isOpen);
+    });
+
+    mobileMenu.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => setMobileMenuOpen(false));
+    });
+  }
+</script>

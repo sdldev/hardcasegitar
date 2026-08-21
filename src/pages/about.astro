@@ -1,63 +1,171 @@
 ---
-import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
-import Layout from '../layouts/BlogPost.astro';
+// About page — who we are, how we work, and why custom matters.
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icons.astro';
+import { MAP_DIRECTIONS_URL, PHONE_DISPLAY, getWhatsAppUrl } from '../data/contact';
+import workshopImage from '../assets/images/Junaidi-Karo-Karo.webp';
+import hardcaseImage from '../assets/images/hardcase-guitar-custom.webp';
+
+const steps = [
+  {
+    title: 'Konsultasi & Pengukuran',
+    description:
+      'Datang langsung ke workshop kami untuk pengukuran gratis, atau kirim foto profil gitar beserta body width, body length, dan ukuran headstock via WhatsApp. Kami konfirmasi dimensi final sebelum produksi dimulai.'
+  },
+  {
+    title: 'Produksi Custom',
+    description:
+      'Setiap hardcase dikerjakan mengikuti dimensi instrumen Anda — bukan ukuran umum. Interior foam dibentuk presisi agar gitar duduk pas tanpa tekanan pada neck maupun headstock.'
+  },
+  {
+    title: 'Quality Check & Serah Terima',
+    description:
+      'Sebelum dikirim, kami pastikan latch, handle, dan interior berfungsi sempurna. Setiap hardcase dilindungi garansi 6 bulan untuk cacat pabrik.'
+  }
+];
+
+const reasons = [
+  {
+    title: 'Presisi untuk instrumen Anda',
+    description: 'Case dibuat dari dimensi gitar Anda sendiri — elektrik, akustik, bass, hingga archtop dan gear custom lainnya.'
+  },
+  {
+    title: 'Material & hardware pilihan',
+    description: 'Rangka kokoh tahan benturan, interior foam lembut yang memeluk instrumen, latch dan handle heavy-duty.'
+  },
+  {
+    title: 'Siap menemani ke mana pun',
+    description: 'Dari latihan, panggung, hingga perjalanan jauh — hardcase dirancang ringan dibawa dan aman menyimpan.'
+  }
+];
 ---
 
-<Layout
-	title="About Me"
-	description="Lorem ipsum dolor sit amet"
-	pubDate={new Date('August 08 2021')}
-	heroImage={AboutHeroImage}
+<Base
+  title="Tentang Kami - Hardcase Guitar Indonesia"
+  description="Kenali Hardcase Guitar Indonesia — workshop custom hardcase gitar & bass di Jakarta Barat: proses pembuatan, pengukuran gratis, dan garansi produk."
 >
-	<p>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-		labore et dolore magna aliqua. Vitae ultricies leo integer malesuada nunc vel risus commodo
-		viverra. Adipiscing enim eu turpis egestas pretium. Euismod elementum nisi quis eleifend quam
-		adipiscing. In hac habitasse platea dictumst vestibulum. Sagittis purus sit amet volutpat. Netus
-		et malesuada fames ac turpis egestas. Eget magna fermentum iaculis eu non diam phasellus
-		vestibulum lorem. Varius sit amet mattis vulputate enim. Habitasse platea dictumst quisque
-		sagittis. Integer quis auctor elit sed vulputate mi. Dictumst quisque sagittis purus sit amet.
-	</p>
+  <main class="pt-[72px]">
+    {/* Page hero */}
+    <section class="bg-secondary py-16">
+      <div class="container">
+        <div class="flex items-center gap-3 mb-4">
+          <span class="h-px w-10 bg-primary"></span>
+          <span class="text-body-sm font-semibold uppercase tracking-[0.2em] text-primary">Tentang Kami</span>
+        </div>
+        <h1 class="text-heading-1 text-white mb-4">Hardcase Guitar Indonesia</h1>
+        <p class="text-body-lg text-text-muted max-w-[600px]">
+          Workshop custom hardcase gitar &amp; bass di Jakarta Barat — setiap case dibuat mengikuti dimensi instrumen Anda.
+        </p>
+      </div>
+    </section>
 
-	<p>
-		Morbi tristique senectus et netus. Id semper risus in hendrerit gravida rutrum quisque non
-		tellus. Habitasse platea dictumst quisque sagittis purus sit amet. Tellus molestie nunc non
-		blandit massa. Cursus vitae congue mauris rhoncus. Accumsan tortor posuere ac ut. Fringilla urna
-		porttitor rhoncus dolor. Elit ullamcorper dignissim cras tincidunt lobortis. In cursus turpis
-		massa tincidunt dui ut ornare lectus. Integer feugiat scelerisque varius morbi enim nunc.
-		Bibendum neque egestas congue quisque egestas diam. Cras ornare arcu dui vivamus arcu felis
-		bibendum. Dignissim suspendisse in est ante in nibh mauris. Sed tempus urna et pharetra pharetra
-		massa massa ultricies mi.
-	</p>
+    {/* Who we are */}
+    <section class="section bg-background">
+      <div class="container grid md:grid-cols-2 gap-16 items-center">
+        <div class="relative overflow-hidden rounded-2xl border border-border-color">
+          <Image
+            src={workshopImage}
+            alt="Hasil hardcase custom dari workshop kami"
+            width={640}
+            height={640}
+            sizes="(max-width: 767px) 100vw, 50vw"
+            class="w-full h-auto object-cover"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div>
+          <h2 class="text-heading-2 text-white mb-6">Perlindungan yang dibuat khusus, bukan asal muat</h2>
+          <div class="space-y-4 text-body-lg text-text-muted leading-relaxed">
+            <p>
+              Kami merancang dan membuat custom hardcase untuk gitar elektrik, akustik dreadnought &amp; jumbo, bass 4 dan 5 string, archtop &amp; semi-hollowbody, hingga case khusus untuk pedalboard, keyboard, dan rack gear.
+            </p>
+            <p>
+              Prinsip kami sederhana: instrumen mahal bukan hanya soal harga, tetapi soal rasa. Karena itu setiap hardcase dibuat pas — foam interior dibentuk mengikuti lekuk body dan neck, latch terpasang rapat, dan handle nyaman digenggam.
+            </p>
+            <p>
+              Kunjungi workshop kami di Duri Kosambi, Cengkareng, Jakarta Barat untuk pengukuran langsung, atau konsultasikan kebutuhan Anda lewat WhatsApp.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-	<p>
-		Mollis nunc sed id semper risus in. Convallis a cras semper auctor neque. Diam sit amet nisl
-		suscipit. Lacus viverra vitae congue eu consequat ac felis donec. Egestas integer eget aliquet
-		nibh praesent tristique magna sit amet. Eget magna fermentum iaculis eu non diam. In vitae
-		turpis massa sed elementum. Tristique et egestas quis ipsum suspendisse ultrices. Eget lorem
-		dolor sed viverra ipsum. Vel turpis nunc eget lorem dolor sed viverra. Posuere ac ut consequat
-		semper viverra nam. Laoreet suspendisse interdum consectetur libero id faucibus. Diam phasellus
-		vestibulum lorem sed risus ultricies tristique. Rhoncus dolor purus non enim praesent elementum
-		facilisis. Ultrices tincidunt arcu non sodales neque. Tempus egestas sed sed risus pretium quam
-		vulputate. Viverra suspendisse potenti nullam ac tortor vitae purus faucibus ornare. Fringilla
-		urna porttitor rhoncus dolor purus non. Amet dictum sit amet justo donec enim.
-	</p>
+    {/* Why custom */}
+    <section class="section bg-secondary">
+      <div class="container">
+        <h2 class="text-heading-2 text-center text-white mb-16">Kenapa Hardcase Custom?</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+          {reasons.map((reason) => (
+            <div class="bg-background border border-border-color rounded-2xl p-8 hover:border-border-color-hover transition-colors duration-standard">
+              <h3 class="text-heading-4 text-white mb-3">{reason.title}</h3>
+              <p class="text-body-md text-text-muted leading-relaxed">{reason.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
 
-	<p>
-		Mattis ullamcorper velit sed ullamcorper morbi tincidunt. Tortor posuere ac ut consequat semper
-		viverra. Tellus mauris a diam maecenas sed enim ut sem viverra. Venenatis urna cursus eget nunc
-		scelerisque viverra mauris in. Arcu ac tortor dignissim convallis aenean et tortor at. Curabitur
-		gravida arcu ac tortor dignissim convallis aenean et tortor. Egestas tellus rutrum tellus
-		pellentesque eu. Fusce ut placerat orci nulla pellentesque dignissim enim sit amet. Ut enim
-		blandit volutpat maecenas volutpat blandit aliquam etiam. Id donec ultrices tincidunt arcu. Id
-		cursus metus aliquam eleifend mi.
-	</p>
+    {/* How we work */}
+    <section class="section bg-background">
+      <div class="container">
+        <h2 class="text-heading-2 text-center text-white mb-16">Proses Kerja Kami</h2>
+        <div class="max-w-[800px] mx-auto space-y-10">
+          {steps.map((step, idx) => (
+            <div class="flex gap-6">
+              <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white text-heading-4 font-bold">
+                {idx + 1}
+              </div>
+              <div>
+                <h3 class="text-heading-4 text-white mb-2">{step.title}</h3>
+                <p class="text-body-md text-text-muted leading-relaxed">{step.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
 
-	<p>
-		Tempus quam pellentesque nec nam aliquam sem. Risus at ultrices mi tempus imperdiet. Id porta
-		nibh venenatis cras sed felis eget velit. Ipsum a arcu cursus vitae. Facilisis magna etiam
-		tempor orci eu lobortis elementum. Tincidunt dui ut ornare lectus sit. Quisque non tellus orci
-		ac. Blandit libero volutpat sed cras. Nec tincidunt praesent semper feugiat nibh sed pulvinar
-		proin gravida. Egestas integer eget aliquet nibh praesent tristique magna.
-	</p>
-</Layout>
+    {/* Gallery + CTA */}
+    <section class="section bg-secondary">
+      <div class="container text-center">
+        <div class="max-w-[420px] mx-auto mb-10 overflow-hidden rounded-2xl border border-border-color">
+          <Image
+            src={hardcaseImage}
+            alt="Contoh hardcase gitar custom"
+            width={840}
+            sizes="(max-width: 767px) 100vw, 420px"
+            class="w-full h-auto object-cover"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <h2 class="text-heading-2 text-white mb-4">Siap melindungi instrumen Anda?</h2>
+        <p class="text-body-lg text-text-muted mb-8 max-w-[600px] mx-auto">
+          Konsultasikan jenis gitar dan kebutuhan Anda — pengukuran di workshop kami gratis.
+        </p>
+        <div class="flex flex-wrap justify-center gap-3">
+          <a
+            href={getWhatsAppUrl('Halo, saya ingin konsultasi tentang hardcase custom')}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-8 py-4 bg-whatsapp text-white font-semibold rounded-full hover:bg-whatsapp-hover transition-colors duration-standard"
+          >
+            <Icon name="whatsapp" size={18} />
+            WhatsApp: {PHONE_DISPLAY}
+          </a>
+          <a
+            href={MAP_DIRECTIONS_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-8 py-4 border border-border-color text-foreground font-semibold rounded-full hover:bg-white/5 transition-colors duration-standard"
+          >
+            <Icon name="navigate" size={18} />
+            Rute ke Workshop
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</Base>

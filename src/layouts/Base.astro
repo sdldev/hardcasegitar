@@ -1,0 +1,65 @@
+---
+// Base page shell — fonts, meta, global styles, header & footer
+import '../styles/global.css';
+import { Font } from 'astro:assets';
+import SiteHeader from '../components/SiteHeader.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE } from '../consts';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Hardcase Guitar Indonesia - Custom Hardcase Gitar & Bass',
+  description = 'Hardcase Guitar Indonesia — produsen custom hardcase gitar & bass. Perlindungan maksimal untuk instrumen Anda, saat disimpan maupun bepergian.',
+} = Astro.props;
+
+// Auto-detect current page from URL path
+const path = Astro.url.pathname;
+const currentPage =
+  path === '/' ? 'home' :
+  path.startsWith('/products') ? 'products' :
+  path.startsWith('/article') ? 'article' :
+  path.startsWith('/contact') ? 'contact' :
+  'home';
+
+// Absolute URLs — scrapers (WA/FB/Google) require full URLs for canonical & OG.
+// Falls back gracefully until `site` in astro.config.mjs points to the real domain.
+const canonicalURL = Astro.site ? new URL(Astro.url.pathname, Astro.site) : Astro.url;
+const OG_IMAGE_PATH = '/seo/6978cf5d8e122e23793db142_Open_Graph.png';
+const ogImageURL = Astro.site ? new URL(OG_IMAGE_PATH, Astro.site) : OG_IMAGE_PATH;
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={SITE_TITLE}
+      href={Astro.site ? new URL('rss.xml', Astro.site) : '/rss.xml'}
+    />
+    <link rel="shortcut icon" href="/seo/6978cf5d8e122e23793db140_favicon__6_.png" />
+    <link rel="apple-touch-icon" href="/seo/6978cf5d8e122e23793db141_favicon__5_.png" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:type" content="website" />
+    <Font cssVariable="--font-inter" preload />
+  </head>
+  <body>
+    <SiteHeader currentPage={currentPage} />
+    <slot />
+    <Footer />
+  </body>
+</html>

@@ -1,141 +1,308 @@
-/*
-  The CSS in this style tag is based off of Bear Blog's default CSS.
-  https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
-  License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
- */
+@import "tailwindcss";
 
+/* ==========================================
+   COFFEE-TECH THEME - DARK MODE ONLY
+   Best Practices: Semantic naming, consistent scale
+   WCAG AA/AAA compliant contrast ratios
+   ========================================== */
+
+/* ===== COLORS ===== (Dark theme exclusive) */
 :root {
-	--accent: #2337ff;
-	--accent-dark: #000d8a;
-	--black: 15, 18, 25;
-	--gray: 96, 115, 159;
-	--gray-light: 229, 233, 240;
-	--gray-dark: 34, 41, 57;
-	--gray-gradient: rgba(var(--gray-light), 50%), #fff;
-	--box-shadow:
-		0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
-		0 16px 32px rgba(var(--gray), 33%);
-}
-body {
-	font-family: var(--font-atkinson);
-	margin: 0;
-	padding: 0;
-	text-align: left;
-	background: linear-gradient(var(--gray-gradient)) no-repeat;
-	background-size: 100% 600px;
-	word-wrap: break-word;
-	overflow-wrap: break-word;
-	color: rgb(var(--gray-dark));
-	font-size: 20px;
-	line-height: 1.7;
-}
-main {
-	width: 720px;
-	max-width: calc(100% - 2em);
-	margin: auto;
-	padding: 3em 1em;
-}
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	margin: 0 0 0.5rem 0;
-	color: rgb(var(--black));
-	line-height: 1.2;
-}
-h1 {
-	font-size: 3.052em;
-}
-h2 {
-	font-size: 2.441em;
-}
-h3 {
-	font-size: 1.953em;
-}
-h4 {
-	font-size: 1.563em;
-}
-h5 {
-	font-size: 1.25em;
-}
-strong,
-b {
-	font-weight: 700;
-}
-a {
-	color: var(--accent);
-}
-a:hover {
-	color: var(--accent);
-}
-p {
-	margin-bottom: 1em;
-}
-.prose p {
-	margin-bottom: 2em;
-}
-textarea {
-	width: 100%;
-	font-size: 16px;
-}
-input {
-	font-size: 16px;
-}
-table {
-	width: 100%;
-}
-img {
-	max-width: 100%;
-	height: auto;
-	border-radius: 8px;
-}
-code {
-	padding: 2px 5px;
-	background-color: rgb(var(--gray-light));
-	border-radius: 2px;
-}
-pre {
-	padding: 1.5em;
-	border-radius: 8px;
-}
-pre > code {
-	all: unset;
-}
-blockquote {
-	border-left: 4px solid var(--accent);
-	padding: 0 0 0 20px;
-	margin: 0;
-	font-size: 1.333em;
-}
-hr {
-	border: none;
-	border-top: 1px solid rgb(var(--gray-light));
-}
-@media (max-width: 720px) {
-	body {
-		font-size: 18px;
-	}
-	main {
-		padding: 1em;
-	}
+  /* Background colors */
+  --bg-primary: #0d0e13;           /* Main background */
+  --bg-secondary: #1a1b22;         /* Secondary/background elements */
+
+  /* Text colors - optimized for readability on dark */
+  --text-primary: #f3ede3;         /* Primary text (high contrast) */
+  --text-secondary: #e5dfd5;       /* Secondary text */
+  --text-muted: #b8afa5;           /* Muted/decorative text */
+  --text-white: #ffffff;           /* Pure white for emphasis */
+
+  /* Accent colors */
+  --color-orange: #c8603d;         /* Primary brand color */
+  --color-orange-hover: #b05030;   /* Hover state */
+  --color-orange-light: #e5a890;   /* Light variant */
+
+  /* Neutral tones for cards, backgrounds */
+  --color-gray-50: #fafafa;        /* Very light gray */
+  --color-gray-100: #f3f4f6;       /* Light gray */
+  --color-gray-200: #e5e7eb;       /* Medium gray */
+  --color-gray-300: #d1d5db;       /* Gray for borders */
+
+  /* Functional colors */
+  --border-color: rgba(255, 255, 255, 0.1);
+  --border-color-hover: rgba(255, 255, 255, 0.15);
+
+  /* Semantic aliases for Tailwind classes */
+  --background: var(--bg-primary);
+  --foreground: var(--text-primary);
+  --primary: var(--color-orange);
+  --primary-fg: var(--text-white);
+  --secondary: var(--bg-secondary);
+  --secondary-fg: var(--text-primary);
+  --muted: var(--bg-secondary);
+  --muted-fg: var(--text-muted);
 }
 
-.sr-only {
-	border: 0;
-	padding: 0;
-	margin: 0;
-	position: absolute !important;
-	height: 1px;
-	width: 1px;
-	overflow: hidden;
-	/* IE6, IE7 - a 0 height clip, off to the bottom right of the visible 1px box */
-	clip: rect(1px 1px 1px 1px);
-	/* maybe deprecated but we need to support legacy browsers */
-	clip: rect(1px, 1px, 1px, 1px);
-	/* modern browsers, clip-path works inwards from each corner */
-	clip-path: inset(50%);
-	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
-	white-space: nowrap;
+/* ===== SEMANTIC THEME (Tailwind v4) ===== */
+/* Registered in @theme so utilities like bg-background support opacity
+   modifiers (bg-background/80) — manual utilities below cannot. */
+@theme {
+  --color-background: var(--bg-primary);
+  --color-foreground: var(--text-primary);
+  --color-primary: var(--color-orange);
+  --color-primary-fg: var(--text-white);
+  --color-secondary: var(--bg-secondary);
+  --color-secondary-fg: var(--text-primary);
+  --color-muted: var(--bg-secondary);
+  --color-muted-fg: var(--text-muted);
+}
+
+/* ===== TYPOGRAPHY SCALE ===== */
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Display sizes - Hero titles */
+  --text-display-sm: clamp(1.25rem, 3vw, 2rem);
+  --text-display-md: clamp(1.75rem, 5vw, 3rem);
+  --text-display-lg: clamp(2.25rem, 7vw, 4.5rem);
+  --text-display--lh: 1.1;
+  --text-display--fw: 900;
+  --text-display--ls: -0.07em;
+
+  /* Headings - Balanced smaller scale */
+  --text-heading-1: var(--text-display-md);        /* H1: Large hero titles */
+  --text-heading-2: clamp(1.5rem, 4vw, 2.5rem);    /* H2: Section titles */
+  --text-heading-3: clamp(1.25rem, 3vw, 2rem);     /* H3: Card titles, subsections */
+  --text-heading-4: clamp(1.125rem, 2.5vw, 1.5rem); /* H4: Category labels, subheaders */
+  --text-heading-5: clamp(1rem, 2vw, 1.25rem);     /* H5: Medium emphasis */
+  --text-heading-6: clamp(0.875rem, 1.75vw, 1.125rem); /* H6: Small emphasis, captions */
+  --text-heading--lh: 1.2;
+  --text-heading--fw: 800;
+  --text-heading--ls: -0.04em;
+
+  /* Body text - Reading optimized */
+  --text-body-sm: clamp(0.875rem, 0.9vw, 1rem);      /* Small body text */
+  --text-body-md: clamp(1rem, 1vw, 1.125rem);        /* Standard body text */
+  --text-body-lg: clamp(1.125rem, 1.125vw, 1.25rem); /* Large body text */
+  --text-body-xl: clamp(1.25rem, 1.25vw, 1.5rem);    /* Extra large body */
+  --text-body--lh: 1.7;
+  --text-body--fw: 400;
+
+  /* Labels & Captions */
+  --text-label: clamp(0.75rem, 0.85vw, 0.875rem);
+  --text-label--lh: 1.5;
+  --text-label--fw: 600;
+  --text-label--ls: 0.08em;
+  --text-label--case: uppercase;
+
+  /* Button text */
+  --text-button: clamp(0.875rem, 1vw, 1rem);
+  --text-button--fw: 600;
+
+  /* Tags / Badges */
+  --text-tag: clamp(0.6875rem, 0.75vw, 0.875rem);
+  --text-tag--lh: 1.3;
+  --text-tag--fw: 700;
+}
+
+/* ===== BRAND COLORS ===== */
+@theme inline {
+  --color-whatsapp: #25d366;
+  --color-whatsapp-hover: #1da851;
+  --color-orange-dark: #b05030;
+  --color-orange-dark-hover: #9a4529;
+}
+
+/* ===== SPACING SCALE ===== */
+@theme inline {
+  /* Base spacing (rem-based, 8px grid) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+
+  /* Responsive spacing (vw-based) */
+  --spacing-section-y: 6rem;
+  --spacing-section-x: clamp(1.5rem, 4vw, 3rem);
+  --spacing-hero-clear: 3rem;
+  --spacing-hero-gap: 2rem;
+  --spacing-card-gap: 1.5rem;
+  --spacing-card-pad: 1.5rem;
+  --spacing-btn-gap: 0.5rem;
+  --spacing-btn-pad-h: 0.875rem;
+  --spacing-btn-pad-w: 1.5rem;
+
+  /* Container widths */
+  --container-max: 1200px;
+  --container-padding: var(--spacing-section-x);
+}
+
+/* ===== BORDER RADIUS ===== */
+@theme inline {
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-full: 9999px;
+}
+
+/* ===== ANIMATION ===== */
+@theme inline {
+  --duration-fast: 150ms;
+  --duration-standard: 300ms;
+  --duration-slow: 500ms;
+
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-smooth: cubic-bezier(0.6, 0.05, 0.15, 0.95);
+}
+
+/* Keyframes */
+@keyframes modelScaleIn {
+  from { transform: scale(0) translateY(30%); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.animate-model-scale-in { animation: modelScaleIn 1s ease-out 0.2s both; }
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-marquee { animation: marquee 30s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-model-scale-in {
+    animation: none;
+  }
+}
+
+/* ===== BASE STYLES ===== */
+@layer base {
+  * {
+    border-color: var(--border-color);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Typography */
+  h1 {
+    font-size: var(--text-heading-1);
+    line-height: var(--text-display--lh);
+    font-weight: var(--text-display--fw);
+    letter-spacing: var(--text-display--ls);
+  }
+  h2 {
+    font-size: var(--text-heading-2);
+    line-height: var(--text-heading--lh);
+    font-weight: var(--text-heading--fw);
+    letter-spacing: var(--text-heading--ls);
+  }
+  h3 {
+    font-size: var(--text-heading-3);
+    line-height: var(--text-heading--lh);
+    font-weight: var(--text-heading--fw);
+    letter-spacing: var(--text-heading--ls);
+  }
+  h4 {
+    font-size: var(--text-heading-4);
+    line-height: var(--text-heading--lh);
+    font-weight: var(--text-heading--fw);
+    letter-spacing: var(--text-heading--ls);
+    text-transform: var(--text-label--case);
+  }
+  h5 {
+    font-size: var(--text-heading-5);
+    line-height: var(--text-heading--lh);
+    font-weight: var(--text-heading--fw);
+    letter-spacing: var(--text-heading--ls);
+  }
+  h6 {
+    font-size: var(--text-heading-6);
+    line-height: var(--text-heading--lh);
+    font-weight: var(--text-heading--fw);
+    letter-spacing: var(--text-heading--ls);
+  }
+  p {
+    font-size: var(--text-body-md);
+    line-height: var(--text-body--lh);
+    font-weight: var(--text-body--fw);
+  }
+
+  a {
+    color: var(--color-orange);
+  }
+
+  .underline-link:hover {
+    text-decoration: underline;
+  }
+
+  details > summary {
+    list-style: none;
+  }
+
+  details > summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+/* ===== UTILITIES ===== */
+@layer utilities {
+  .hero-gradient {
+    background: radial-gradient(circle, var(--primary) 40%, transparent 70%);
+  }
+
+  /* Text colors */
+  .text-primary { color: var(--primary); }
+  .text-primary-fg { color: var(--primary-fg); }
+  .text-secondary { color: var(--secondary-fg); }
+  .text-foreground { color: var(--text-primary); }
+  .text-foreground-dim { color: var(--text-secondary); }
+  .text-muted { color: var(--text-muted); }
+  .text-white { color: var(--text-white); }
+
+  /* Background colors */
+  .bg-primary { background-color: var(--primary); }
+  .bg-primary-fg { background-color: var(--primary-fg); }
+  .bg-background { background-color: var(--bg-primary); }
+  .bg-secondary { background-color: var(--bg-secondary); }
+  .bg-white { background-color: var(--color-white); }
+  .bg-gray-50 { background-color: var(--color-gray-50); }
+  .bg-gray-100 { background-color: var(--color-gray-100); }
+}
+
+/* ===== COMPONENTS ===== */
+@layer components {
+  .container {
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: clamp(1rem, 4vw, 3rem);
+  }
+
+  .section {
+    padding-block: 6rem;
+  }
 }

@@ -1,0 +1,35 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import BlogPost from '../../layouts/BlogPost.astro';
+
+export async function getStaticPaths() {
+	const recentPostsCount = 5;
+	const posts = await getCollection('blog');
+	const sortedPosts = [...posts].sort(
+		(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+	);
+
+	return posts.map((post) => ({
+		params: { slug: post.id },
+		props: {
+			post,
+			// Recent posts for the sidebar — current post excluded
+			recentPosts: sortedPosts
+				.filter((p) => p.id !== post.id)
+				.slice(0, recentPostsCount),
+		},
+	}));
+}
+
+interface Props {
+	post: CollectionEntry<'blog'>;
+	recentPosts: CollectionEntry<'blog'>[];
+}
+
+const { post, recentPosts } = Astro.props;
+const { Content } = await render(post);
+---
+
+<BlogPost {...post.data} recentPosts={recentPosts}>
+	<Content />
+</BlogPost>

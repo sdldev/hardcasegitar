@@ -1,0 +1,49 @@
+--- // Hero section - clean layout with dark theme
+import { Image } from 'astro:assets';
+import heroImage from '../assets/images/hardcase-guitar-custom.webp';
+
+interface Props {
+  title?: string;
+  subtitle?: string;
+  buttonHref?: string;
+}
+
+const {
+  title = 'Hardcase Guitar Indonesia',
+  subtitle = 'Produsen custom hardcase gitar & bass Indonesia dengan kualitas premium',
+  buttonHref = '/products'
+} = Astro.props;
+---
+
+<section class="relative min-h-screen flex items-center justify-center bg-background overflow-hidden">
+  {/* Gradient background glow */}
+  <div class="absolute inset-0 pointer-events-none">
+    <div class="hero-gradient absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[50vw] rounded-full blur-3xl opacity-20" />
+  </div>
+
+  <div class="container relative z-10 px-8 max-w-[90vw] md:max-w-[800px]">
+    {/* Main Title */}
+    <h1 class="text-display font-black tracking-tight animate-model-scale-in leading-[1.1] mb-8 md:mb-12 text-foreground">
+      {title}
+    </h1>
+
+    {/* Product Image — above-the-fold LCP, loaded eagerly */}
+    <div class="flex justify-center mb-12">
+      <Image
+        src={heroImage}
+        alt="Custom hardcase gitar berkualitas tinggi"
+        width={900}
+        sizes="(max-width: 767px) 85vw, 450px"
+        class="w-auto h-auto max-w-[85vw] md:max-w-[450px] object-contain drop-shadow-2xl"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+      />
+    </div>
+
+    {/* Subtitle */}
+    <p class="text-body-lg text-foreground-dim text-center max-w-[600px] mx-auto mb-8 leading-relaxed font-light">
+      {subtitle}
+    </p>
+  </div>
+</section>

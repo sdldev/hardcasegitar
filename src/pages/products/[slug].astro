@@ -1,0 +1,314 @@
+---
+// Product detail page — clean, elegant layout.
+import { Image, getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import { getWhatsAppLink, products } from '../../data/products';
+
+export function getStaticPaths() {
+  return products.map((product) => ({
+    params: { slug: product.slug },
+    props: { product },
+  }));
+}
+
+const { product } = Astro.props;
+const waLink = getWhatsAppLink(product.title);
+
+// Optimized full-size sources for thumbnails & lightbox (data-src attributes)
+const resolvedImages = await Promise.all(
+  product.images.map((image) => getImage({ src: image }))
+);
+const lightboxSources = resolvedImages.map((image) => image.src);
+---
+
+<Base title={`${product.title} - Hardcase Guitar Indonesia`} description={product.description}>
+  <main class="pt-[72px]">
+    {/* Breadcrumb */}
+    <nav class="bg-background border-b border-border-color py-4" aria-label="Breadcrumb">
+      <div class="container flex items-center gap-2 text-body-sm text-text-muted">
+        <a href="/" class="hover:text-white transition-colors">Home</a>
+        <svg class="w-3 h-3 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        <a href="/products" class="hover:text-white transition-colors">Products</a>
+        <svg class="w-3 h-3 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        <span class="text-foreground">{product.title}</span>
+      </div>
+    </nav>
+
+    {/* Gallery + Detail */}
+    <section class="section bg-background">
+      <div class="container grid lg:grid-cols-5 gap-12 lg:gap-16 items-start">
+        {/* Left: Gallery */}
+        <div class="lg:col-span-2 lg:sticky lg:top-24">
+          <button
+            type="button"
+            id="preview-trigger"
+            class="relative w-full aspect-square bg-secondary rounded-2xl overflow-hidden mb-4 cursor-zoom-in group border border-border-color"
+            aria-label="Perbesar gambar"
+          >
+            <Image
+              id="main-image"
+              src={product.images[0]}
+              alt={`${product.title} - gambar utama`}
+              width={700}
+              height={700}
+              sizes="(max-width: 1023px) 100vw, 40vw"
+              class="w-full h-full object-cover transition-transform duration-slow group-hover:scale-[1.03]"
+              loading="eager"
+              decoding="async"
+            />
+            <span class="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/30 transition-colors duration-standard">
+              <span class="flex items-center justify-center w-12 h-12 rounded-full bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-standard">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"/></svg>
+              </span>
+            </span>
+          </button>
+
+          <div class="grid grid-cols-3 gap-3">
+            {product.images.map((image, idx) => (
+              <button
+                type="button"
+                class={`thumb-btn aspect-square bg-secondary rounded-xl overflow-hidden border transition-all duration-standard ${idx === 0 ? 'thumb-active' : 'thumb-idle'}`}
+                data-src={lightboxSources[idx]}
+                aria-label={`Lihat gambar ${idx + 1}`}
+              >
+                <Image
+                  src={image}
+                  alt={`${product.title} - thumbnail ${idx + 1}`}
+                  width={220}
+                  height={220}
+                  class="w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Right: Detail */}
+        <div class="lg:col-span-3">
+          {/* Header */}
+          <header>
+            <div class="flex items-center gap-3 mb-5">
+              <span class="h-px w-10 bg-primary"></span>
+              <span class="text-body-sm font-semibold uppercase tracking-[0.2em] text-primary">{product.category}</span>
+            </div>
+            <h1 class="text-heading-1 text-white mb-5">{product.title}</h1>
+            <p class="text-body-lg text-text-muted leading-relaxed max-w-2xl">{product.description}</p>
+          </header>
+
+          {/* Bahan & Ukuran */}
+          <section class="mt-10 pt-8 border-t border-border-color">
+            <div class="grid md:grid-cols-2 gap-8">
+              <div>
+                <h2 class="flex items-center gap-3 mb-3">
+                  <span class="h-px w-5 bg-primary"></span>
+                  <span class="text-body-sm font-semibold uppercase tracking-[0.15em] text-foreground">Bahan</span>
+                </h2>
+                <p class="text-body-md text-text-muted leading-relaxed">{product.material}</p>
+              </div>
+              <div>
+                <h2 class="flex items-center gap-3 mb-3">
+                  <span class="h-px w-5 bg-primary"></span>
+                  <span class="text-body-sm font-semibold uppercase tracking-[0.15em] text-foreground">Ukuran</span>
+                </h2>
+                <p class="text-body-md text-text-muted leading-relaxed">{product.dimensions}</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Spesifikasi Teknis */}
+          <section class="mt-8 pt-8 border-t border-border-color">
+            <h2 class="flex items-center gap-3 mb-6">
+              <span class="h-px w-5 bg-primary"></span>
+              <span class="text-body-sm font-semibold uppercase tracking-[0.15em] text-foreground">Spesifikasi Teknis</span>
+            </h2>
+            <dl>
+              {product.specs.map((spec) => (
+                <div class="flex items-baseline justify-between gap-8 py-3 border-b border-border-color last:border-0">
+                  <dt class="text-body-sm text-foreground-dim shrink-0">{spec.label}</dt>
+                  <dd class="text-body-md text-foreground text-right leading-relaxed">{spec.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+
+          {/* Fitur Unggulan */}
+          <section class="mt-8 pt-8 border-t border-border-color">
+            <h2 class="flex items-center gap-3 mb-6">
+              <span class="h-px w-5 bg-primary"></span>
+              <span class="text-body-sm font-semibold uppercase tracking-[0.15em] text-foreground">Fitur Unggulan</span>
+            </h2>
+            <ul class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-4">
+              {product.features.map((feature) => (
+                <li class="flex items-start gap-3">
+                  <svg class="flex-shrink-0 w-4 h-4 text-primary mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                  <span class="text-body-md text-text-muted leading-relaxed">{feature}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          {/* Order */}
+          <div class="mt-10 pt-8 border-t border-border-color">
+            <a
+              href={waLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center px-14 py-4 bg-orange-dark text-white text-button font-semibold rounded-full hover:bg-orange-dark-hover transition-colors duration-standard shadow-lg hover:shadow-xl"
+            >
+              Order
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Bottom CTA */}
+    <section class="bg-secondary py-20">
+      <div class="container text-center">
+        <h2 class="text-heading-2 text-white mb-4">Siap order atau butuh konsultasi?</h2>
+        <p class="text-body-lg text-text-muted mb-8 max-w-[600px] mx-auto">
+          Tim kami siap membantu custom hardcase sesuai spesifikasi instrumen Anda.
+        </p>
+        <a
+          href={waLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-3 px-10 py-4 bg-orange-dark text-white text-button font-semibold rounded-full hover:bg-orange-dark-hover transition-colors duration-standard shadow-lg hover:shadow-xl"
+        >
+          Hubungi Kami Sekarang
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  {/* Image preview overlay (lightbox) */}
+  <div
+    id="preview-overlay"
+    class="hidden fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Preview gambar produk"
+  >
+    <button
+      type="button"
+      id="preview-close"
+      class="absolute top-5 right-5 flex items-center justify-center w-11 h-11 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+      aria-label="Tutup preview"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <button
+      type="button"
+      id="preview-prev"
+      class="absolute left-5 top-1/2 -translate-y-1/2 flex items-center justify-center w-11 h-11 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+      aria-label="Gambar sebelumnya"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+    </button>
+    <img
+      id="preview-image"
+      src={lightboxSources[0]}
+      alt={`${product.title} - preview`}
+      class="max-w-full max-h-full object-contain rounded-xl"
+    />
+    <button
+      type="button"
+      id="preview-next"
+      class="absolute right-5 top-1/2 -translate-y-1/2 flex items-center justify-center w-11 h-11 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+      aria-label="Gambar berikutnya"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</Base>
+
+<script client:load>
+  const mainImage = document.getElementById('main-image');
+  const thumbs = document.querySelectorAll('.thumb-btn');
+  const previewTrigger = document.getElementById('preview-trigger');
+  const previewOverlay = document.getElementById('preview-overlay');
+  const previewImage = document.getElementById('preview-image');
+  const previewClose = document.getElementById('preview-close');
+  const previewPrev = document.getElementById('preview-prev');
+  const previewNext = document.getElementById('preview-next');
+
+  // Ordered image list shared by thumbnails & preview
+  const images = Array.from(thumbs).map((thumb) => thumb.getAttribute('data-src') || '');
+  let currentIndex = 0;
+
+  // Thumbnail switcher
+  thumbs.forEach((thumb, index) => {
+    thumb.addEventListener('click', () => {
+      const src = thumb.getAttribute('data-src');
+      if (!src || !mainImage) return;
+
+      currentIndex = index;
+      // Clear responsive srcset so the swapped full-size source takes effect
+      mainImage.removeAttribute('srcset');
+      mainImage.removeAttribute('sizes');
+      mainImage.setAttribute('src', src);
+
+      thumbs.forEach((t) => {
+        t.classList.remove('thumb-active');
+        t.classList.add('thumb-idle');
+      });
+      thumb.classList.add('thumb-active');
+      thumb.classList.remove('thumb-idle');
+    });
+  });
+
+  // Image preview (lightbox) with prev/next navigation
+  const showPreviewImage = (index) => {
+    if (!previewImage || images.length === 0) return;
+    const bounded = ((index % images.length) + images.length) % images.length;
+    currentIndex = bounded;
+    previewImage.setAttribute('src', images[bounded]);
+  };
+
+  const openPreview = () => {
+    if (!previewOverlay) return;
+    showPreviewImage(currentIndex);
+    previewOverlay.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closePreview = () => {
+    if (!previewOverlay) return;
+    previewOverlay.classList.add('hidden');
+    document.body.style.overflow = '';
+  };
+
+  previewTrigger?.addEventListener('click', openPreview);
+  previewClose?.addEventListener('click', closePreview);
+  previewPrev?.addEventListener('click', () => showPreviewImage(currentIndex - 1));
+  previewNext?.addEventListener('click', () => showPreviewImage(currentIndex + 1));
+
+  previewOverlay?.addEventListener('click', (event) => {
+    if (event.target === previewOverlay) closePreview();
+  });
+  document.addEventListener('keydown', (event) => {
+    if (previewOverlay?.classList.contains('hidden')) return;
+    if (event.key === 'Escape') closePreview();
+    if (event.key === 'ArrowLeft') showPreviewImage(currentIndex - 1);
+    if (event.key === 'ArrowRight') showPreviewImage(currentIndex + 1);
+  });
+</script>
+
+<style>
+  .thumb-btn {
+    border-color: var(--border-color);
+  }
+  .thumb-idle {
+    opacity: 0.7;
+  }
+  .thumb-idle:hover {
+    opacity: 1;
+  }
+  .thumb-active {
+    border-color: var(--primary);
+    opacity: 1;
+  }
+</style>

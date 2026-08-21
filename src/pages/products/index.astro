@@ -1,0 +1,32 @@
+---
+// Products listing page — grid of all products.
+import Base from '../../layouts/Base.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { products } from '../../data/products';
+---
+
+<Base
+  title="Produk Kami - Hardcase Guitar Indonesia"
+  description="Katalog custom hardcase gitar & bass: elektrik, akustik, bass, semi-hollow, hingga multi-gear case. Setiap hardcase dibuat mengikuti dimensi instrumen Anda."
+>
+  <main class="pt-[72px]">
+    {/* Page hero */}
+    <section class="bg-secondary py-16">
+      <div class="container text-center">
+        <h1 class="text-heading-1 text-white mb-4">Produk Kami</h1>
+        <p class="text-body-lg text-text-muted max-w-[600px] mx-auto">
+          Custom hardcase gitar &amp; bass untuk segala jenis instrumen — dibuat mengikuti dimensi gitar Anda, bukan ukuran umum.
+        </p>
+      </div>
+    </section>
+
+    {/* Products grid */}
+    <section class="section bg-background">
+      <div class="container">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {products.map((product) => <ProductCard product={product} />)}
+        </div>
+      </div>
+    </section>
+  </main>
+</Base>

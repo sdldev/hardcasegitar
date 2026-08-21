@@ -1,0 +1,90 @@
+--- // Services section - zigzag dark theme layout
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+import hardcaseCustom from '../assets/images/hardcase-guitar-custom.webp';
+import portfolioElektrik2 from '../assets/images/portfolio-elektrik-2.jpg';
+import portfolioAkustik1 from '../assets/images/portfolio-Akustik-1.jpg';
+import portfolioBass3 from '../assets/images/portfolio-bass-3.jpg';
+
+interface Service {
+  number: string;
+  title: string;
+  description: string;
+  image: ImageMetadata;
+}
+
+const services: Service[] = [
+  {
+    number: '01',
+    title: 'Custom Presisi',
+    description: 'Setiap hardcase dibuat mengikuti dimensi gitar Anda — bukan ukuran umum. Instrumen duduk pas, terlindungi maksimal.',
+    image: hardcaseCustom
+  },
+  {
+    number: '02',
+    title: 'Material Kuat',
+    description: 'Rangka kokoh dengan lapisan luar tahan benturan. Dirancang untuk perjalanan panggung tanpa mengorbankan estetika.',
+    image: portfolioElektrik2
+  },
+  {
+    number: '03',
+    title: 'Perlengkapan Lengkap',
+    description: 'Interior empuk yang memeluk instrumen, latch rapat, kunci aman — ketenangan saat disimpan maupun bepergian.',
+    image: portfolioAkustik1
+  },
+  {
+    number: '04',
+    title: 'Nyaman Dibawa',
+    description: 'Ringan, seimbang, ergonomis. Dari bagasi pesawat hingga ruang latihan, hardcase siap menemani ke mana pun.',
+    image: portfolioBass3
+  }
+];
+---
+
+<section class="section bg-background">
+  <div class="container">
+    <h2 class="text-heading-2 text-center mb-16 text-foreground">Keunggulan Kami</h2>
+
+    <div class="space-y-20">
+      {services.map((service, idx) => {
+        const isOdd = idx % 2 === 0;
+
+        return (
+          <div class={`grid md:grid-cols-2 gap-12 items-center ${isOdd ? '' : '[&>*:first-child]:md:order-2'}`}>
+            {/* Image */}
+            <div class={`relative overflow-hidden rounded-xl shadow-lg ${isOdd ? '' : 'md:order-2'}`}>
+              <Image
+                src={service.image}
+                alt={service.title}
+                width={600}
+                height={600}
+                sizes="(max-width: 767px) 100vw, 50vw"
+                class="w-full h-auto object-cover hover:scale-105 transition-transform duration-standard"
+                loading="lazy"
+                decoding="async"
+              />
+              <div class="absolute top-4 left-4 px-3 py-2 bg-primary-fg/95 backdrop-blur-sm rounded-lg shadow-md">
+                <span class="text-label font-bold text-bg-primary">{service.number}</span>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div class={isOdd ? '' : 'md:text-right'}>
+              <h3 class="text-heading-3 text-white mb-3 font-semibold">{service.title}</h3>
+              <p class="text-body-lg text-text-muted leading-relaxed font-light">{service.description}</p>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style is:global>
+@media (prefers-reduced-motion: reduce) {
+  .overflow-hidden img {
+    transition: none;
+  }
+}
+</style>

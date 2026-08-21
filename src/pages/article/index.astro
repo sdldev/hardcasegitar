@@ -1,0 +1,176 @@
+---
+// Article listing — clean list format with client-side pagination.
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+
+const PAGE_SIZE = 4;
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<Base
+	title="Artikel - Hardcase Guitar Indonesia"
+	description="Artikel, tips, dan panduan seputar hardcase gitar & bass custom dari Hardcase Guitar Indonesia."
+>
+	<main class="pt-[72px]">
+		{/* Page hero */}
+		<section class="bg-secondary py-16">
+			<div class="container">
+				<div class="flex items-center gap-3 mb-4">
+					<span class="h-px w-10 bg-primary"></span>
+					<span class="text-body-sm font-semibold uppercase tracking-[0.2em] text-primary">Artikel</span>
+				</div>
+				<h1 class="text-heading-1 text-white mb-4">Artikel &amp; Panduan</h1>
+				<p class="text-body-lg text-text-muted max-w-[600px]">
+					Tips, panduan, dan wawasan seputar hardcase gitar &amp; bass — dari pemilihan material hingga perawatan instrumen.
+				</p>
+			</div>
+		</section>
+
+		{/* Article list */}
+		<section class="section bg-background">
+			<div class="container max-w-[900px]">
+				<ul id="article-list">
+					{
+						posts.map((post) => (
+							<li class="article-item py-8">
+								<a href={`/article/${post.id}/`} class="group flex flex-col sm:flex-row gap-6">
+									<div class="sm:w-56 shrink-0 aspect-[16/10] rounded-xl overflow-hidden border border-border-color bg-secondary">
+										{post.data.heroImage ? (
+											<Image
+												src={post.data.heroImage}
+												alt=""
+												width={640}
+												height={400}
+												class="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-slow"
+											/>
+										) : (
+											<div class="w-full h-full" />
+										)}
+									</div>
+									<div class="flex flex-col gap-2 min-w-0">
+										<span class="text-body-sm text-muted">
+											<FormattedDate date={post.data.pubDate} />
+										</span>
+										<h2 class="text-heading-4 text-white leading-snug group-hover:text-primary transition-colors duration-standard">
+											{post.data.title}
+										</h2>
+										<p class="text-body-md text-text-muted leading-relaxed line-clamp-2">
+											{post.data.description}
+										</p>
+										<span class="inline-flex items-center gap-2 text-body-md font-semibold text-primary mt-auto pt-2">
+											Baca Selengkapnya
+											<svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+										</span>
+									</div>
+								</a>
+							</li>
+						))
+					}
+				</ul>
+
+				{/* Pagination (filled by JS) */}
+				<nav id="article-pagination" class="hidden flex-wrap items-center justify-center gap-2 mt-12" aria-label="Navigasi halaman artikel"></nav>
+			</div>
+		</section>
+	</main>
+</Base>
+
+<script define:vars={{ PAGE_SIZE }}>
+	const items = Array.from(document.querySelectorAll('.article-item'));
+	const pagination = document.getElementById('article-pagination');
+
+	const totalPages = Math.ceil(items.length / PAGE_SIZE);
+	let currentPage = 1;
+
+	function goToPage(page) {
+		if (page < 1 || page > totalPages || page === currentPage) return;
+		currentPage = page;
+		items.forEach((item, index) => {
+			const itemPage = Math.floor(index / PAGE_SIZE) + 1;
+			item.classList.toggle('hidden', itemPage !== currentPage);
+		});
+		renderPagination();
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	}
+
+	function renderPagination() {
+		if (!pagination || totalPages <= 1) return;
+		pagination.classList.remove('hidden');
+		pagination.classList.add('flex');
+		pagination.innerHTML = '';
+
+		pagination.appendChild(createButton('←', 'Halaman sebelumnya', currentPage > 1, () => goToPage(currentPage - 1)));
+
+		for (let page = 1; page <= totalPages; page++) {
+			const button = document.createElement('button');
+			button.type = 'button';
+			button.textContent = String(page);
+			button.setAttribute('aria-label', `Halaman ${page}`);
+			button.className = page === currentPage ? 'page-btn page-btn-active' : 'page-btn';
+			if (page === currentPage) button.setAttribute('aria-current', 'page');
+			button.addEventListener('click', () => goToPage(page));
+			pagination.appendChild(button);
+		}
+
+		pagination.appendChild(createButton('→', 'Halaman berikutnya', currentPage < totalPages, () => goToPage(currentPage + 1)));
+	}
+
+	function createButton(label, ariaLabel, enabled, onClick) {
+		const button = document.createElement('button');
+		button.type = 'button';
+		button.textContent = label;
+		button.setAttribute('aria-label', ariaLabel);
+		button.className = 'page-btn';
+		button.disabled = !enabled;
+		if (enabled) button.addEventListener('click', onClick);
+		return button;
+	}
+
+	// Initial render — only activate pagination when there is more than one page
+	if (totalPages > 1) {
+		items.forEach((item, index) => {
+			item.classList.toggle('hidden', index >= PAGE_SIZE);
+		});
+		renderPagination();
+	}
+</script>
+
+<style>
+	/* Hairline divider between list items */
+	.article-item + .article-item {
+		border-top: 1px solid var(--border-color);
+	}
+
+	.page-btn {
+		min-width: 2.75rem;
+		height: 2.75rem;
+		padding: 0 1rem;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: var(--radius-full);
+		border: 1px solid var(--border-color);
+		color: var(--text-primary);
+		font-weight: 600;
+		font-size: 0.9375rem;
+		transition: all var(--duration-standard) var(--ease-standard);
+	}
+	.page-btn:hover:not(:disabled):not(.page-btn-active) {
+		border-color: var(--border-color-hover);
+		background-color: rgb(255 255 255 / 0.05);
+	}
+	.page-btn:disabled {
+		opacity: 0.35;
+		cursor: not-allowed;
+	}
+	.page-btn-active {
+		background-color: var(--primary);
+		border-color: var(--primary);
+		color: var(--text-white);
+	}
+</style>
