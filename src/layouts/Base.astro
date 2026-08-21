@@ -48,8 +48,8 @@ const ogImageURL = Astro.site ? new URL(OG_IMAGE_PATH, Astro.site) : OG_IMAGE_PA
       title={SITE_TITLE}
       href={Astro.site ? new URL('rss.xml', Astro.site) : '/rss.xml'}
     />
-    <link rel="shortcut icon" href="/seo/6978cf5d8e122e23793db140_favicon__6_.png" />
-    <link rel="apple-touch-icon" href="/seo/6978cf5d8e122e23793db141_favicon__5_.png" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImageURL} />

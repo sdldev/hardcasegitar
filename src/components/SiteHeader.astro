@@ -1,7 +1,5 @@
 ---
 // Navigation header - clean dark theme
-import { Image } from 'astro:assets';
-import logoImage from '../assets/images/hardcase-guitar-custom.webp';
 
 interface Props {
   currentPage?: string;
@@ -24,7 +22,7 @@ const navLinks = [
   <nav class="container flex items-center justify-between px-4 py-4 max-w-[1200px] mx-auto">
     {/* Logo */}
     <a href="/" class="flex items-center gap-2" aria-label="Home">
-      <Image src={logoImage} alt="Logo" width={200} height={125} class="h-8 w-auto object-contain" decoding="async" />
+      <img src="/seo/logo.webp" alt="Logo" width={157} height={157} class="h-8 w-8 object-contain" decoding="async" />
       <span class="text-body font-semibold text-foreground">Hardcase Guitar Indonesia</span>
     </a>
 

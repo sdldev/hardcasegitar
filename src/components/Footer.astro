@@ -1,7 +1,5 @@
 --- // Footer section - company info, quick links, contact
-import { Image } from 'astro:assets';
 import Icon from './Icons.astro';
-import logoImage from '../assets/images/hardcase-guitar-custom.webp';
 import { PHONE_DISPLAY, PHONE_TEL, getWhatsAppUrl } from '../data/contact';
 
 const currentYear = new Date().getFullYear();
@@ -32,7 +30,7 @@ const socialLinks: SocialLink[] = [
       {/* Company Info */}
       <div>
         <div class="flex items-center gap-3 mb-4">
-          <Image src={logoImage} alt="Logo" width={200} height={125} class="h-12 w-auto object-contain" loading="lazy" decoding="async" />
+          <img src="/seo/logo.webp" alt="Logo" width={157} height={157} class="h-12 w-12 object-contain" loading="lazy" decoding="async" />
           <div>
             <h4 class="text-heading-5 font-bold text-white">Hardcase Guitar Indonesia</h4>
             <p class="text-body-sm text-text-muted mt-1">Custom Hardcase Maker</p>
